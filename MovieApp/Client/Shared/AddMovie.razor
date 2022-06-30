@@ -1,0 +1,42 @@
+﻿@page "/movies/add"
+@inject HttpClient httpClient
+@inject NavigationManager NavigationManager
+<h3>Add</h3>
+
+<EditForm Model="@movie" OnValidSubmit="@OnValidSubmit">
+    <div class="form-group">
+        <label for="Title">Title</label>
+        <InputText id="Title" @bind-Value="@movie.Title" class="form-control" placeholder="Title"></InputText>
+    </div>
+    <div class="form-group">
+        <label for="Summary">Summary</label>
+        <InputText id="Summary" @bind-Value="@movie.Summary" placeholder="Summary" class="form-control"></InputText>
+    </div>
+    <div class="form-group">
+        <label for="InTheaters">In Theaters</label>
+        <InputCheckbox id="InTheaters" @bind-Value="@movie.InTheaters" class="form-control"></InputCheckbox>
+    </div>
+    <div class="form-group">
+        <label for="Trailer">Trailer</label>
+        <InputText id="Trailer" @bind-Value="@movie.Trailer" placeholder="Trailer" class="form-control"></InputText>
+    </div>
+    <div class="form-group">
+        <label for="ReleaseDate">ReleaseDate</label>
+        <InputDate id="ReleaseDate" @bind-Value="@movie.ReleaseDate" class="form-control"></InputDate>
+    </div>
+    <div class="form-group">
+        <label for="Poster">Poster</label>
+        <InputText id="Poster" @bind-Value="@movie.Poster" placeholder="Poster" class="form-control"></InputText>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+@code {
+    public EditMovieDTO movie = new EditMovieDTO();
+
+    async Task OnValidSubmit()
+    {
+        await httpClient.PostAsJsonAsync($"api/movies/add/", movie);
+        NavigationManager.NavigateTo("/movies");
+
+    }
+}

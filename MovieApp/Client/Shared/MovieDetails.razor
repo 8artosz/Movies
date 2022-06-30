@@ -1,0 +1,60 @@
+﻿@page "/movie/{MovieId:int}"
+@inject HttpClient httpClient
+<h3>Movie's Details</h3>
+<style>
+    input {
+        vertical-align: central;
+    }
+</style>
+@if (movie == null)
+{
+    <img src="https://media0.giphy.com/media/3oEjI6SIIHBdRxXI40/200.gif" alt="Loading" />
+}
+else
+{
+<table style="width:90%">
+    <tr>
+        <td>Title:</td>
+        <td> <input type="text" id="title" name="title" value=@movie.Title style="text-align:center;"></td>
+        <td rowspan="5"><img src=@movie.Poster width="202" height="150" /></td>
+    </tr>
+    <tr>
+        <td>Summary:</td>
+        <td><input type="text" id="summary" name="summary" value=@movie.Summary style="text-align:center;"></td>
+    </tr>
+    <tr>
+        <td>InTheaters:</td>
+        <td><input type="text" id="intheaters" name="intheaters" value=@movie.InTheaters.ToString() style="text-align:center;"></td>
+
+    </tr>
+    <tr>
+        <td>Trailer:</td>
+        <td><input type="text" id="trailer" name="trailer" value=@movie.Trailer style="text-align:center;"></td>
+
+    </tr>
+    <tr>
+        <td>Release Date:</td>
+        <td><input type="datetime" id="releasedate" name="releasedate" value=@movie.ReleaseDate style="text-align:center;"></td>
+
+    </tr>
+    <tr>
+        <a class="btn btn-success" href="/movies">Return</a>
+    </tr>
+
+</table>
+}
+@code {
+    [Parameter] public int MovieId { get; set; }
+    public Movie movie;
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHTTP = await httpClient.GetAsync("https://localhost:44311/api/movies/details/" + MovieId);
+
+        if (responseHTTP.IsSuccessStatusCode)
+        {
+            var responseString = await responseHTTP.Content.ReadAsStringAsync();
+            movie = System.Text.Json.JsonSerializer.Deserialize<Movie>(responseString, new System.Text.Json.JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        }
+
+    }
+}
