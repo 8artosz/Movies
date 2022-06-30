@@ -1,2 +1,2 @@
 # Movies
-Movies web app with Blazor
+Web app with Blazor
